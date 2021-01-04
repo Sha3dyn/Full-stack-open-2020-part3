@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose')
-var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require('mongoose-unique-validator')
 
 if (process.argv.length<3) {
   console.log('give password as argument')
@@ -27,9 +28,9 @@ const phonebookSchema = new mongoose.Schema({
     minlength: 8,
     required: true
   }
-});
+})
 
-phonebookSchema.plugin(uniqueValidator);
+phonebookSchema.plugin(uniqueValidator)
 
 const Record = mongoose.model('Record', phonebookSchema)
 
@@ -39,23 +40,24 @@ const Record = mongoose.model('Record', phonebookSchema)
 })*/
 
 if(process.argv.length<4) {
-    console.log('phonebook:')
-    Record.find({}).then(result => {
-        result.forEach(record => {
-            console.log(record.name + ' ' + record.number)
-        })
-
-        mongoose.connection.close()
+  console.log('phonebook:')
+  Record.find({}).then(result => {
+    result.forEach(record => {
+      console.log(record.name + ' ' + record.number)
     })
+
+    mongoose.connection.close()
+  })
 } else {
-    const record = new Record({
-        name: name,
-        number: number
-    })
+  const record = new Record({
+    name: name,
+    number: number
+  })
 
-    record.save().then(response => {
+  record.save().then(response => {
+    console.log(response)
     console.log(`added ${name} number ${number} to phonebook`)
     mongoose.connection.close()
-    })
+  })
 }
 

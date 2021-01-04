@@ -24,41 +24,42 @@ const randomId = () => {
 */
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+  res.send('<h1>Hello World!</h1>')
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
   Record.findById(req.params.id)
-  .then(record => {
-    if(record) {
-      res.json(record)
-    } else {
-      res.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(record => {
+      if(record) {
+        res.json(record)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Record.findByIdAndRemove(req.params.id)
-  .then(result => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
-}) 
+    .then(result => {
+      console.log(result)
+      res.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
 app.get('/info', (req, res, next) => {
-  const responseTime = new Date();
+  const responseTime = new Date()
 
   Record.find({}).then(record => {
     res.send(`Phonebook has info for ${record.length} people<br><br>${responseTime}`)
   }).catch(error => next(error))
-}) 
+})
 
 app.get('/api/persons', (req, res, next) => {
-    Record.find({}).then(persons => {
-      res.json(persons)
-    }).catch(error => next(error)) 
+  Record.find({}).then(persons => {
+    res.json(persons)
+  }).catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res, next) => {
@@ -90,26 +91,26 @@ app.post('/api/persons', (req, res, next) => {
   record.save().then(savedRecord => {
     res.json(savedRecord)
   }).catch((error) => next(error))
-});
+})
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
-  
+
   const record = {
     name: body.name,
     number: body.number,
   }
 
-  Record.findByIdAndUpdate(req.params.id, record, {new: true, runValidators: true, context: 'query'})
-  .then(updatedRecord => {
-    res.json(updatedRecord.toJSON())
-  })
-  .catch(error => (next(error)))
+  Record.findByIdAndUpdate(req.params.id, record, { new: true, runValidators: true, context: 'query' })
+    .then(updatedRecord => {
+      res.json(updatedRecord.toJSON())
+    })
+    .catch(error => (next(error)))
 })
 
 const errorHandler = (error, req, res, next) => {
   if(error.name === 'castError') {
-    return res.status(400).send({ error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if(error.name === 'ValidationError') {
     return res.status(400).json({ error: error.message })
   }
@@ -119,7 +120,8 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })

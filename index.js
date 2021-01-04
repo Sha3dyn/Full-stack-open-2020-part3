@@ -89,9 +89,7 @@ app.post('/api/persons', (req, res, next) => {
 
   record.save().then(savedRecord => {
     res.json(savedRecord)
-  }).catch((error) => {
-     console.error(error);
-  });
+  }).catch((error) => next(error))
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -102,9 +100,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number,
   }
 
-  Record.findByIdAndUpdate(req.params.id, record, {new: true})
+  Record.findByIdAndUpdate(req.params.id, record, {new: true, runValidators: true, context: 'query'})
   .then(updatedRecord => {
-    res.json(updatedRecord)
+    res.json(updatedRecord.toJSON())
   })
   .catch(error => (next(error)))
 })
